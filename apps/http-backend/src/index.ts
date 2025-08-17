@@ -29,10 +29,18 @@ app.post("/signup", async (req, res) => {
                 name: parsedData.data.name
             }
         })
+
+        const token = jwt.sign({ userId: user.id }, JWT_SECRET);
         res.json({
-            userId: user.id
+            token,
+            userId: user.id,
+            message: "User created successfully"
         })
-    } catch(e) {
+        res.json({
+            userId: user.id,
+            message: "User created successfully"
+        })
+    } catch (e) {
         res.status(411).json({
             message: "User already exists with this username"
         })
@@ -93,7 +101,7 @@ app.post("/room", middleware, async (req, res) => {
         res.json({
             roomId: room.id
         })
-    } catch(e) {
+    } catch (e) {
         res.status(411).json({
             message: "Room already exists with this name"
         })
@@ -117,13 +125,13 @@ app.get("/chats/:roomId", async (req, res) => {
         res.json({
             messages
         })
-    } catch(e) {
+    } catch (e) {
         console.log(e);
         res.json({
             messages: []
         })
     }
-    
+
 })
 
 app.get("/room/:slug", async (req, res) => {
@@ -139,4 +147,10 @@ app.get("/room/:slug", async (req, res) => {
     })
 })
 
-app.listen(3001);
+app.get("/", (req, res) => {
+    res.json({
+        message: "Hello from the backend!"
+    })
+});
+
+app.listen(3001, () => console.log("Server is running on port 3001"));
